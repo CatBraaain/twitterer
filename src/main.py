@@ -7,10 +7,12 @@ from twitterer import Twitterer
 def main():
     twitterer = Twitterer()
     twitterer.authenticate()
-    twitterer.driver.get(
-        "https://twitter.com/search?q=cat%20min_retweets%3A10000%20filter%3Avideos"
+    tweets = list(
+        twitterer.get_tweets(
+            url="https://twitter.com/search?q=cat%20min_retweets%3A10000%20filter%3Avideos",
+            max_tweets=1,
+        )
     )
-    tweets = list(twitterer.get_tweets({"max_tweets": 50}))
 
 
 main()

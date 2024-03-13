@@ -32,5 +32,5 @@ class Twitterer:
     def authenticate(self):
         Authenticator(self.driver).authenticate()
 
-    def get_tweets(self, options):
-        yield from Collector(self.driver).get_tweets(options)
+    def get_tweets(self, url, max_tweets):
+        yield from Collector(self.driver).get_tweets(url, max_tweets)

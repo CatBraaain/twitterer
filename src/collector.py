@@ -13,10 +13,12 @@ class Collector:
         self.tweets = []
         self.tweet_elements = []
 
-    def get_tweets(self, options):
+    def get_tweets(self, url, max_tweets=50):
         self.tweets = []
         self.tweet_elements = []
-        self.max_tweets = options["max_tweets"]
+        self.max_tweets = max_tweets
+
+        self.driver.get(url)
 
         while not (self._reached_max()) and (
             new_tweet_element := self._wait_for_next_tweet_element()
