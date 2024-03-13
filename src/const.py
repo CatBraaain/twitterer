@@ -36,8 +36,9 @@ class Selector:
     LIKES = "div[data-testid='like']"
     ANALYTICS = "a[href*='/status/'][href$='/analytics']"
 
-    IMGS = "[data-testid='tweetPhoto'] img"
+    IMGS = "[data-testid='tweetPhoto'][src^='https://pbs.twimg.com/media/'] img"
     VIDEOS = "[data-testid='videoPlayer']"
+    VIDEO_THUMBNAILS = "[data-testid='videoPlayer'] video"
 
 
 # $$("[data-testid='tweet']")

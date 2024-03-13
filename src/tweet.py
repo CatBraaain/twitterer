@@ -64,7 +64,7 @@ class Tweet:
             video=Video(
                 count=len(soup.select(Selector.VIDEOS)),
                 thumbnails=[
-                    e.get("src") for e in soup.select(Selector.VIDEO_THUMBNAILS)
+                    e.get("poster") for e in soup.select(Selector.VIDEO_THUMBNAILS)
                 ],
             ),
         )
