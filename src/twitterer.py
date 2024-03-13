@@ -1,3 +1,7 @@
+import datetime
+from pathlib import Path
+
+import jsonpickle
 from fake_useragent import UserAgent
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -33,4 +37,16 @@ class Twitterer:
         Authenticator(self.driver).authenticate()
 
     def get_tweets(self, url, max_tweets):
-        yield from Collector(self.driver).get_tweets(url, max_tweets)
+        yield from Collector(self.driver).get_tweets(url,max_tweets)
+
+    def save_to_file(self, tweets, out_path=None):
+        if out_path is None:
+            out_path = f"output\\tweets_{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S.%f")[:-3]}.json"
+
+        tweets_json = jsonpickle.encode(tweets, unpicklable=False, indent=4)
+
+        p = Path(out_path)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        with p.open(mode="x") as f:
+            f.write(tweets_json)
+        pass

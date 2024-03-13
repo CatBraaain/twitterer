@@ -69,6 +69,14 @@ class Tweet:
             ),
         )
 
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        del state["_Tweet__element"]
+        del state["html"]
+        del state["_Tweet__soup"]
+
+        return state
+
 
 @dataclass
 class User:

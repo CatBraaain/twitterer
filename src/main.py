@@ -14,5 +14,7 @@ def main():
         )
     )
 
+    twitterer.save_to_file(tweets)
+
 
 main()
