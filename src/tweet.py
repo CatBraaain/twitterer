@@ -19,9 +19,16 @@ class Tweet:
         self.html = html
         self.__soup = soup
 
-        self.url = "https://twitter.com" + (
-            soup.select_one(Selector.ANALYTICS).get("href").removesuffix("/analytics")
-        )
+        try:
+            self.url = "https://twitter.com" + (
+                soup.select_one(Selector.URL).get("href")
+            )
+        except:
+            self.url = "https://twitter.com" + (
+                soup.select_one(Selector.ANALYTICS)
+                .get("href")
+                .removesuffix("/analytics")
+            )
         self.id = self.url.split("/")[-1]
 
         try:
@@ -41,6 +48,13 @@ class Tweet:
         extractor_map = {"span": (lambda e: e.text), "img": (lambda e: e.get("alt"))}
         self.content = "".join([extractor_map[e.name](e) for e in content_elements])
 
+        try:
+            analytics = re.sub(
+                "[^\\d]", "", soup.select_one(Selector.ANALYTICS).get("aria-label")
+            )
+        except:
+            analytics = ""
+
         self.stat = Stat(
             replys=re.sub(
                 "[^\\d]", "", soup.select_one(Selector.REPLYS).get("aria-label")
@@ -51,8 +65,9 @@ class Tweet:
             likes=re.sub(
                 "[^\\d]", "", soup.select_one(Selector.LIKES).get("aria-label")
             ),
-            analytics=re.sub(
-                "[^\\d]", "", soup.select_one(Selector.ANALYTICS).get("aria-label")
+            analytics=analytics,
+            bookmarks=re.sub(
+                "[^\\d]", "", soup.select_one(Selector.BOOKMARKS).get("aria-label")
             ),
         )
 
@@ -91,6 +106,7 @@ class Stat:
     retweets: int
     likes: int
     analytics: int
+    bookmarks: int
 
 
 class Media:

@@ -1,4 +1,4 @@
-﻿import os
+import os
 
 from dotenv import load_dotenv
 
@@ -24,7 +24,7 @@ class Selector:
     LOADING = "circle[style^='stroke']"
     BASE = "article[data-testid='tweet']"
 
-    # URL = "a[href*='/status/']:not([href$='analytics'])"
+    URL = "a[href*='/status/']:not([href$='analytics'])"
     USER_ELEMENTS = "div[data-testid='User-Name'] a"
     VERIFIED = "[data-testid='icon-verified']"
     DATE_TIME = "time[datetime]"
@@ -35,6 +35,7 @@ class Selector:
     RETWEETS = "div[data-testid='retweet']"
     LIKES = "div[data-testid='like']"
     ANALYTICS = "a[href*='/status/'][href$='/analytics']"
+    BOOKMARKS = "div[data-testid='bookmark']"
 
     IMGS = "[data-testid='tweetPhoto'][src^='https://pbs.twimg.com/media/'] img"
     VIDEOS = "[data-testid='videoPlayer']"
