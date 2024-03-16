@@ -38,8 +38,10 @@ class Selector:
     BOOKMARKS = "div[data-testid='bookmark']"
 
     IMGS = "[data-testid='tweetPhoto'][src^='https://pbs.twimg.com/media/'] img"
-    VIDEOS = "[data-testid='videoPlayer']"
-    VIDEO_THUMBNAILS = "[data-testid='videoPlayer'] video"
+    VIDEOS = "[data-testid='videoPlayer'],[data-testid='previewInterstitial']"
+    VIDEO_THUMBNAILS = (
+        "[data-testid='videoPlayer'] video,[data-testid='previewInterstitial'] img"
+    )
 
 
 # $$("[data-testid='tweet']")

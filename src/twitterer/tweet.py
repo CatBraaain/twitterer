@@ -45,8 +45,13 @@ class Tweet:
         )
 
         content_elements = soup.select(Selector.CONTENT)
-        extractor_map = {"span": (lambda e: e.text), "img": (lambda e: e.get("alt"))}
-        self.content = "".join([extractor_map[e.name](e) for e in content_elements])
+        content_extractor_map = {
+            "span": (lambda e: e.text),
+            "img": (lambda e: e.get("alt")),
+        }
+        self.content = "".join(
+            [content_extractor_map[e.name](e) for e in content_elements]
+        )
 
         try:
             analytics = re.sub(
@@ -71,17 +76,18 @@ class Tweet:
             ),
         )
 
+        thumbnail_elements = soup.select(Selector.VIDEO_THUMBNAILS)
+        thumbnail_extractor_map = {
+            "video": (lambda e: e.get("poster")),
+            "img": (lambda e: e.get("src")),
+        }
+        thumbnails = [thumbnail_extractor_map[e.name](e) for e in thumbnail_elements]
         self.media = Media(
             img=Img(
                 count=len(soup.select(Selector.IMGS)),
                 urls=[e.get("src") for e in soup.select(Selector.IMGS)],
             ),
-            video=Video(
-                count=len(soup.select(Selector.VIDEOS)),
-                thumbnails=[
-                    e.get("poster") for e in soup.select(Selector.VIDEO_THUMBNAILS)
-                ],
-            ),
+            video=Video(count=len(soup.select(Selector.VIDEOS)), thumbnails=thumbnails),
         )
 
     def __getstate__(self):
