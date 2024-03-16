@@ -1,8 +1,8 @@
-import os
+﻿import os
 
-from dotenv import load_dotenv
+from dotenv import find_dotenv, load_dotenv
 
-load_dotenv()
+load_dotenv(find_dotenv(usecwd=True), override=True)
 
 TWITTER_LOGIN_URL = "https://twitter.com/i/flow/login"
 # TWITTER_REDIRECT_URL = "https://twitter.com/i/flow/login?redirect_after_login=%2Fhome"
