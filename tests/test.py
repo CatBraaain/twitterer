@@ -1,4 +1,9 @@
+import os
+from pathlib import Path
+
 from snoop import pp, snoop
+
+os.chdir(Path(__file__).parent)
 
 from twitterer import Twitterer
 

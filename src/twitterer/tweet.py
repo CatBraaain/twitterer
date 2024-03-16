@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from snoop import pp, snoop
 
-from const import *
+from .const import *
 
 
 class Tweet:

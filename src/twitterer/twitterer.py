@@ -6,9 +6,9 @@ from fake_useragent import UserAgent
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from authenticator import Authenticator
-from collector import Collector
-from const import *
+from .authenticator import Authenticator
+from .collector import Collector
+from .const import *
 
 
 class Twitterer:

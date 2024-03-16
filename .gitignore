@@ -1,5 +1,8 @@
 __pycache__
 .env
 .venv
+build
 output
+TODO.md
 twitter_cookie.pkl
+twitterer.egg-info

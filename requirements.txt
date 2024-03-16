@@ -1,8 +1,0 @@
-bs4
-fake-useragent
-jsonpickle
-lxml
-pandas
-python-dotenv
-selenium
-snoop
