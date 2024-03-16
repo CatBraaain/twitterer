@@ -10,8 +10,17 @@ from .const import *
 
 
 class Authenticator:
+
     def __init__(self, driver):
         self.driver = driver
+        self.condition_logined = EC.all_of(
+            EC.url_contains(TWITTER_HOME_URL),
+            EC.presence_of_element_located((By.CSS_SELECTOR, Selector.LOGIN_SUCCESSED)),
+        )
+        self.condition_required_to_login = EC.all_of(
+            EC.url_contains(TWITTER_LOGIN_URL),
+            EC.presence_of_element_located((By.CSS_SELECTOR, Selector.LOGIN_FAILED)),
+        )
 
     def authenticate(self):
         self.driver.get(TWITTER_HOME_URL)
@@ -21,7 +30,7 @@ class Authenticator:
             self._load_cookies()
             self.driver.get(TWITTER_HOME_URL)
 
-        is_logined = self._wait_for_login
+        is_logined = self._determine_logined()
         if not (is_logined):
             self._login()
             self._save_cookies()
@@ -35,31 +44,32 @@ class Authenticator:
         cookies = self.driver.get_cookies()
         pickle.dump(cookies, open(COOKIES_PATH, "wb"), pickle.HIGHEST_PROTOCOL)
 
-    def _wait_for_login(self):
+    def _determine_logined(self):
         WebDriverWait(self.driver, 10).until(
             EC.any_of(
-                EC.all_of(
-                    EC.url_contains(TWITTER_HOME_URL),
-                    EC.presence_of_element_located(Selector.LOGIN_SUCCESSED),
-                ),
-                EC.presence_of_element_located(Selector.LOGIN_FAILED),
+                self.condition_logined,
+                self.condition_required_to_login,
             )
         )
-        is_logined = bool(self.driver.find_elements(Selector.LOGIN_SUCCESSED))
-        return is_logined
+
+        return bool(self.condition_logined(self.driver))
 
     def _login(self):
-        self.driver.implicitly_wait(10)
+        try:
+            self.driver.implicitly_wait(10)
 
-        username_input = self.driver.find_element(By.CSS_SELECTOR, Selector.USERNAME)
-        username_input.send_keys(TWITTER_USERNAME, Keys.RETURN)
+            username_input = self.driver.find_element(
+                By.CSS_SELECTOR, Selector.USERNAME
+            )
+            username_input.send_keys(TWITTER_USERNAME, Keys.RETURN)
 
-        password_input = self.driver.find_element(By.CSS_SELECTOR, Selector.PASSWORD)
-        password_input.send_keys(TWITTER_PASSWORD, Keys.RETURN)
+            password_input = self.driver.find_element(
+                By.CSS_SELECTOR, Selector.PASSWORD
+            )
+            password_input.send_keys(TWITTER_PASSWORD, Keys.RETURN)
 
-        self.driver.implicitly_wait(0)
+            self.driver.implicitly_wait(0)
 
-        is_logined = self._wait_for_login()
-        if not (is_logined):
-            # login failed
-            raise Exception
+            WebDriverWait(self.driver, 10).until(self.condition_logined)
+        except:
+            print("login failed")

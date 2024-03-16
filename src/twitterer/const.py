@@ -18,7 +18,7 @@ class Selector:
     USERNAME = "input[autocomplete='username']"
     PASSWORD = "input[autocomplete='current-password']"
 
-    LOGIN_SUCCESSED = "header[role='banner']"
+    LOGIN_SUCCESSED = "[data-testid='SideNav_AccountSwitcher_Button']"
     LOGIN_FAILED = "[data-testid='mask']"
 
     LOADING = "circle[style^='stroke']"
