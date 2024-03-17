@@ -1,21 +1,21 @@
 import os
 from pathlib import Path
 
-from snoop import pp, snoop
+# from snoop import pp, snoop
 
 os.chdir(Path(__file__).parent)
 
 from twitterer import Twitterer
 
 
-@snoop()
+# @snoop()
 def main():
     twitterer = Twitterer()
     twitterer.authenticate()
     tweets = list(
         twitterer.get_tweets(
-            url="https://twitter.com/search?q=cat%20min_retweets%3A10000%20filter%3Avideos",
-            max_tweets=1,
+            url="https://twitter.com/search?q=funny%20min_retweets:1000%20filter:videos",
+            max_tweets=10,
         )
     )
 
