@@ -1,8 +1,11 @@
-import os
+﻿import os
 
 from dotenv import find_dotenv, load_dotenv
 
-load_dotenv(find_dotenv(usecwd=True), override=True)
+env_path = find_dotenv(usecwd=True)
+if not (env_path):
+    raise Exception("Could not find env file to use authenticate")
+load_dotenv(env_path, override=True)
 
 TWITTER_LOGIN_URL = "https://twitter.com/i/flow/login"
 # TWITTER_REDIRECT_URL = "https://twitter.com/i/flow/login?redirect_after_login=%2Fhome"

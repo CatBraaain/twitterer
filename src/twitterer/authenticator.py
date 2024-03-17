@@ -72,4 +72,4 @@ class Authenticator:
 
             WebDriverWait(self.driver, 10).until(self.condition_logined)
         except:
-            print("login failed")
+            raise Exception("login failed")
