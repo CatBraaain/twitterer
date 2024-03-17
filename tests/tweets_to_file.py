@@ -10,7 +10,7 @@ from twitterer import Twitterer
 
 # @snoop()
 def main():
-    twitterer = Twitterer()
+    twitterer = Twitterer(headless=True)
     twitterer.authenticate()
     tweets = list(
         twitterer.get_tweets(
