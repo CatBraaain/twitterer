@@ -2,6 +2,7 @@ __pycache__
 .env
 .venv
 build
+dist
 output
 TODO.md
 twitter_cookie.pkl
