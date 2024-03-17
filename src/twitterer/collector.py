@@ -23,7 +23,7 @@ class Collector:
         while not (self._reached_max()) and (
             new_tweet_element := self._wait_for_next_tweet_element()
         ):
-            new_tweet = Tweet(new_tweet_element)
+            new_tweet = Tweet(self.driver, new_tweet_element)
 
             self.tweet_elements.append(new_tweet_element)
             self.tweets.append(new_tweet)

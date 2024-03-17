@@ -5,13 +5,14 @@ from typing import List
 
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
-from snoop import pp, snoop
 
 from .const import *
 
 
 class Tweet:
-    def __init__(self, element):
+    def __init__(self, driver, element):
+        self.driver = driver
+
         html = element.get_attribute("outerHTML")
         soup = BeautifulSoup(html, "lxml")
 
@@ -60,7 +61,7 @@ class Tweet:
         except:
             analytics = ""
 
-        self.stat = Stat(
+        self.statistic = Statistic(
             replys=re.sub(
                 "[^\\d]", "", soup.select_one(Selector.REPLYS).get("aria-label")
             ),
@@ -74,6 +75,11 @@ class Tweet:
             bookmarks=re.sub(
                 "[^\\d]", "", soup.select_one(Selector.BOOKMARKS).get("aria-label")
             ),
+        )
+
+        self.status = Status(
+            is_liked=bool(soup.select(Selector.LIKED)),
+            is_retweeted=bool(soup.select(Selector.RETWEETED)),
         )
 
         thumbnail_elements = soup.select(Selector.VIDEO_THUMBNAILS)
@@ -95,8 +101,48 @@ class Tweet:
         del state["_Tweet__element"]
         del state["html"]
         del state["_Tweet__soup"]
+        del state["driver"]
 
         return state
+
+    def like(self):
+        self.driver.implicitly_wait(10)
+        try:
+            self.__element.find_element(By.CSS_SELECTOR, Selector.UNLIKED).click()
+        except:
+            print(f"failed to like a tweet {self.id=}")
+        self.driver.implicitly_wait(0)
+
+    def unlike(self):
+        self.driver.implicitly_wait(10)
+        try:
+            self.__element.find_element(By.CSS_SELECTOR, Selector.LIKED).click()
+        except:
+            print(f"failed to unlike a tweet {self.id=}")
+        self.driver.implicitly_wait(0)
+
+    def retweet(self):
+        self.driver.implicitly_wait(10)
+        try:
+            self.__element.find_element(By.CSS_SELECTOR, Selector.UNRETWEETED).click()
+            self.driver.find_element(By.CSS_SELECTOR, Selector.RETWEET_CONFIRM).click()
+        except:
+            print(f"failed to retweet a tweet {self.id=}")
+        self.driver.implicitly_wait(0)
+
+    def unretweet(self):
+        self.driver.implicitly_wait(10)
+        try:
+            self.__element.find_element(By.CSS_SELECTOR, Selector.RETWEETED).click()
+            self.driver.find_element(
+                By.CSS_SELECTOR, Selector.UNRETWEET_CONFIRM
+            ).click()
+        except:
+            print(f"failed to unretweet a tweet {self.id=}")
+        self.driver.implicitly_wait(0)
+
+    def update(self):
+        self.__init__(self.__element)
 
 
 @dataclass
@@ -107,12 +153,18 @@ class User:
 
 
 @dataclass
-class Stat:
+class Statistic:
     replys: int
     retweets: int
     likes: int
     analytics: int
     bookmarks: int
+
+
+@dataclass
+class Status:
+    is_liked: bool
+    is_retweeted: bool
 
 
 class Media:

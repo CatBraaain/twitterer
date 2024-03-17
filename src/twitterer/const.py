@@ -1,4 +1,4 @@
-﻿import os
+import os
 
 from dotenv import find_dotenv, load_dotenv
 
@@ -32,8 +32,17 @@ class Selector:
     CONTENT = "div[data-testid='tweetText'] span,div[data-testid='tweetText'] img"
 
     REPLYS = "div[data-testid='reply']"
-    RETWEETS = "div[data-testid='retweet']"
-    LIKES = "div[data-testid='like']"
+
+    UNRETWEETED = "div[data-testid='retweet']"
+    RETWEETED = "div[data-testid='unretweet']"
+    RETWEETS = f"{UNRETWEETED},{RETWEETED}"
+    RETWEET_CONFIRM = "div[data-testid='retweetConfirm']"
+    UNRETWEET_CONFIRM = "div[data-testid='unretweetConfirm']"
+
+    UNLIKED = "div[data-testid='like']"
+    LIKED = "div[data-testid='unlike']"
+    LIKES = f"{UNLIKED},{LIKED}"
+
     ANALYTICS = "a[href*='/status/'][href$='/analytics']"
     BOOKMARKS = "div[data-testid='bookmark']"
 
