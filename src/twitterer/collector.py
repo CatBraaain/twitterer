@@ -36,7 +36,8 @@ class Collector:
     def _reached_max(self):
         reached_max = len(self.tweets) >= self.max_tweets
         if reached_max:
-            print("got enough tweets")
+            print(f"got {len(self.tweets)}/{self.max_tweets} tweets")
+            print("reached max tweets")
 
         return reached_max
 
@@ -49,6 +50,7 @@ class Collector:
                 self._get_new_tweet_element
             )
         except:
+            print(f"got {len(self.tweets)}/{self.max_tweets} tweets")
             print("no more tweets")
             new_tweet_element = None
         return new_tweet_element
