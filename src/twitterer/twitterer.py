@@ -26,7 +26,7 @@ class Twitterer:
         options.add_argument("--start-maximized")
         options.add_argument(f"--user-agent={UserAgent().chrome}")
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        options.add_experimental_option("detach", True)
+        options.add_experimental_option("detach", not headless)
 
         if(headless):
             options.add_argument("--headless=new")
