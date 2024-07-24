@@ -1,16 +1,18 @@
 import os
+import sys
 from pathlib import Path
 
 # from snoop import pp, snoop
 
 os.chdir(Path(__file__).parent)
+sys.path.append("../src")
 
 from twitterer import Twitterer
 
 
 # @snoop()
 def main():
-    twitterer = Twitterer(headless=True)
+    twitterer = Twitterer(headless=False)
     twitterer.authenticate()
     tweets = list(
         twitterer.get_tweets(
