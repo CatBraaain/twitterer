@@ -25,29 +25,29 @@ class Selector:
     LOGIN_FAILED = "[data-testid='mask']"
 
     LOADING = "circle[style^='stroke']"
-    BASE = "article[data-testid='tweet']"
+    BASE = "[data-testid='tweet']"
 
     URL = "a[href*='/status/']:not([href$='analytics'])"
-    USER_ELEMENTS = "div[data-testid='User-Name'] a"
+    USER_ELEMENTS = "[data-testid='User-Name'] a"
     VERIFIED = "[data-testid='icon-verified']"
     DATE_TIME = "time[datetime]"
 
-    CONTENT = "div[data-testid='tweetText'] span,div[data-testid='tweetText'] img"
+    CONTENT = "[data-testid='tweetText'] span,[data-testid='tweetText'] img"
 
-    REPLYS = "div[data-testid='reply']"
+    REPLYS = "[data-testid='reply']"
 
-    UNRETWEETED = "div[data-testid='retweet']"
-    RETWEETED = "div[data-testid='unretweet']"
+    UNRETWEETED = "[data-testid='retweet']"
+    RETWEETED = "[data-testid='unretweet']"
     RETWEETS = f"{UNRETWEETED},{RETWEETED}"
-    RETWEET_CONFIRM = "div[data-testid='retweetConfirm']"
-    UNRETWEET_CONFIRM = "div[data-testid='unretweetConfirm']"
+    RETWEET_CONFIRM = "[data-testid='retweetConfirm']"
+    UNRETWEET_CONFIRM = "[data-testid='unretweetConfirm']"
 
-    UNLIKED = "div[data-testid='like']"
-    LIKED = "div[data-testid='unlike']"
+    UNLIKED = "[data-testid='like']"
+    LIKED = "[data-testid='unlike']"
     LIKES = f"{UNLIKED},{LIKED}"
 
     ANALYTICS = "a[href*='/status/'][href$='/analytics']"
-    BOOKMARKS = "div[data-testid='bookmark']"
+    BOOKMARKS = "[data-testid='bookmark']"
 
     IMGS = "[data-testid='tweetPhoto'][src^='https://pbs.twimg.com/media/'] img"
     VIDEOS = "[data-testid='videoPlayer'],[data-testid='previewInterstitial']"
