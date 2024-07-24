@@ -23,7 +23,7 @@ class Authenticator:
         )
 
     def authenticate(self):
-        self.driver.get(TWITTER_HOME_URL)
+        self.driver.get(TWITTER_LOGIN_URL)
 
         has_cookie = os.path.exists(COOKIES_PATH)
         if has_cookie:
