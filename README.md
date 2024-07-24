@@ -22,7 +22,7 @@ twitterer = Twitterer()
 twitterer.authenticate()
 tweets = list(
     twitterer.get_tweets(
-        url="https://twitter.com/search?q=funny%20filter:videos",
+        url="https://x.com/search?q=funny%20filter:videos",
         max_tweets=20,
     )
 )
@@ -39,7 +39,7 @@ from twitterer import Twitterer
 twitterer = Twitterer(headless=False)
 twitterer.authenticate()
 for tweet in twitterer.get_tweets(
-    url="https://twitter.com/home",
+    url="https://x.com/home",
     max_tweets=20,
 ):
     tweet.like()

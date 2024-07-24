@@ -21,11 +21,9 @@ class Tweet:
         self.__soup = soup
 
         try:
-            self.url = "https://twitter.com" + (
-                soup.select_one(Selector.URL).get("href")
-            )
+            self.url = "https://x.com" + (soup.select_one(Selector.URL).get("href"))
         except:
-            self.url = "https://twitter.com" + (
+            self.url = "https://x.com" + (
                 soup.select_one(Selector.ANALYTICS)
                 .get("href")
                 .removesuffix("/analytics")

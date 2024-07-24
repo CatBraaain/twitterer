@@ -7,9 +7,9 @@ if not (env_path):
     raise Exception("Could not find env file to use authenticate")
 load_dotenv(env_path, override=True)
 
-TWITTER_LOGIN_URL = "https://twitter.com/i/flow/login"
-# TWITTER_REDIRECT_URL = "https://twitter.com/i/flow/login?redirect_after_login=%2Fhome"
-TWITTER_HOME_URL = "https://twitter.com/home"
+TWITTER_LOGIN_URL = "https://x.com/i/flow/login"
+# TWITTER_REDIRECT_URL = "https://x.com/i/flow/login?redirect_after_login=%2Fhome"
+TWITTER_HOME_URL = "https://x.com/home"
 
 TWITTER_USERNAME = os.getenv("TWITTER_USERNAME")
 TWITTER_PASSWORD = os.getenv("TWITTER_PASSWORD")

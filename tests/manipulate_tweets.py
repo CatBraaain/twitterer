@@ -15,7 +15,7 @@ def main():
     twitterer = Twitterer(headless=False)
     twitterer.authenticate()
     for tweet in twitterer.get_tweets(
-        url="https://twitter.com/search?q=funny%20min_retweets:1000%20filter:videos",
+        url="https://x.com/search?q=funny%20min_retweets:1000%20filter:videos",
         max_tweets=1,
     ):
         tweet.like()
