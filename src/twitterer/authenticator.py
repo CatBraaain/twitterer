@@ -1,4 +1,4 @@
-import os
+﻿import os
 import pickle
 
 from selenium.webdriver.common.by import By
@@ -33,7 +33,7 @@ class Authenticator:
                 pass
             self.driver.get(TWITTER_HOME_URL)
 
-        is_logined = self._determine_logined()
+        is_logined = self._is_logined()
         if not (is_logined):
             self._login()
             self._save_cookies()
@@ -47,7 +47,7 @@ class Authenticator:
         cookies = self.driver.get_cookies()
         pickle.dump(cookies, open(COOKIES_PATH, "wb"), pickle.HIGHEST_PROTOCOL)
 
-    def _determine_logined(self):
+    def _is_logined(self):
         try:
             WebDriverWait(self.driver, 10).until(
                 EC.any_of(
