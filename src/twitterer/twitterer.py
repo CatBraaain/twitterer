@@ -8,14 +8,13 @@ from selenium.webdriver.chrome.options import Options
 
 from .authenticator import Authenticator
 from .collector import Collector
-from .const import *
 
 
 class Twitterer:
-    def __init__(self,headless=True):
+    def __init__(self, headless=True):
         self.driver = self._get_driver(headless)
 
-    def _get_driver(self,headless=True):
+    def _get_driver(self, headless=True):
         options = Options()
         # options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--disable-gpu")
@@ -28,7 +27,7 @@ class Twitterer:
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option("detach", not headless)
 
-        if(headless):
+        if (headless):
             options.add_argument("--headless=new")
 
         driver = webdriver.Chrome(options=options)
@@ -39,7 +38,7 @@ class Twitterer:
         Authenticator(self.driver).authenticate()
 
     def get_tweets(self, url, max_tweets):
-        yield from Collector(self.driver).get_tweets(url,max_tweets)
+        yield from Collector(self.driver).get_tweets(url, max_tweets)
 
     def save_to_file(self, tweets, out_path=None):
         if out_path is None:

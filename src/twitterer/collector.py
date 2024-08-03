@@ -1,8 +1,8 @@
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from .const import *
+from . import const
 from .tweet import Tweet
 
 
@@ -49,18 +49,20 @@ class Collector:
             new_tweet_element = WebDriverWait(self.driver, 5).until(
                 self._get_new_tweet_element
             )
-        except:
+        except NoSuchElementException:
             print(f"got {len(self.tweets)}/{self.max_tweets} tweets")
             print("no more tweets")
             new_tweet_element = None
         return new_tweet_element
 
     def _is_loading(self, _=None):
-        is_loading = bool(self.driver.find_elements(By.CSS_SELECTOR, Selector.LOADING))
+        is_loading = bool(
+            self.driver.find_elements(By.CSS_SELECTOR, const.Selector.LOADING)
+        )
         return is_loading
 
     def _get_new_tweet_element(self, _=None):
-        tweet_elements = self.driver.find_elements(By.CSS_SELECTOR, Selector.BASE)
+        tweet_elements = self.driver.find_elements(By.CSS_SELECTOR, const.Selector.BASE)
         new_tweet_elements = [e for e in tweet_elements if e not in self.tweet_elements]
         # new_tweet_element = (new_tweet_elements or [None])[0]
         new_tweet_element = new_tweet_elements[0] if new_tweet_elements else None

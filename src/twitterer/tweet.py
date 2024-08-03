@@ -1,12 +1,15 @@
-import pickle
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import List
 
 from bs4 import BeautifulSoup
+from selenium.common.exceptions import (
+    ElementNotInteractableException,
+    NoSuchElementException,
+)
 from selenium.webdriver.common.by import By
 
-from .const import *
+from . import const
 
 
 class Tweet:
@@ -21,29 +24,31 @@ class Tweet:
         self.__soup = soup
 
         try:
-            self.url = "https://x.com" + (soup.select_one(Selector.URL).get("href"))
-        except:
             self.url = "https://x.com" + (
-                soup.select_one(Selector.ANALYTICS)
+                soup.select_one(const.Selector.URL).get("href")
+            )
+        except AttributeError:
+            self.url = "https://x.com" + (
+                soup.select_one(const.Selector.ANALYTICS)
                 .get("href")
                 .removesuffix("/analytics")
             )
         self.id = self.url.split("/")[-1]
 
         try:
-            self.date_time = soup.select_one(Selector.DATE_TIME).get("datetime")
-        except:
+            self.date_time = soup.select_one(const.Selector.DATE_TIME).get("datetime")
+        except AttributeError:
             self.date_time = ""
         self.is_ad = False if self.date_time else True
 
-        user_elements = soup.select(Selector.USER_ELEMENTS)
+        user_elements = soup.select(const.Selector.USER_ELEMENTS)
         self.user = User(
             name=user_elements[0].text,
             id=user_elements[1].text.removeprefix("@"),
-            verified=bool(soup.select(Selector.VERIFIED)),
+            verified=bool(soup.select(const.Selector.VERIFIED)),
         )
 
-        content_elements = soup.select(Selector.CONTENT)
+        content_elements = soup.select(const.Selector.CONTENT)
         content_extractor_map = {
             "span": (lambda e: e.text),
             "img": (lambda e: e.get("alt")),
@@ -54,33 +59,37 @@ class Tweet:
 
         try:
             analytics = re.sub(
-                "[^\\d]", "", soup.select_one(Selector.ANALYTICS).get("aria-label")
+                "[^\\d]",
+                "",
+                soup.select_one(const.Selector.ANALYTICS).get("aria-label"),
             )
-        except:
+        except AttributeError:
             analytics = ""
 
         self.statistic = Statistic(
             replys=re.sub(
-                "[^\\d]", "", soup.select_one(Selector.REPLYS).get("aria-label")
+                "[^\\d]", "", soup.select_one(const.Selector.REPLYS).get("aria-label")
             ),
             retweets=re.sub(
-                "[^\\d]", "", soup.select_one(Selector.RETWEETS).get("aria-label")
+                "[^\\d]", "", soup.select_one(const.Selector.RETWEETS).get("aria-label")
             ),
             likes=re.sub(
-                "[^\\d]", "", soup.select_one(Selector.LIKES).get("aria-label")
+                "[^\\d]", "", soup.select_one(const.Selector.LIKES).get("aria-label")
             ),
             analytics=analytics,
             bookmarks=re.sub(
-                "[^\\d]", "", soup.select_one(Selector.BOOKMARKS).get("aria-label")
+                "[^\\d]",
+                "",
+                soup.select_one(const.Selector.BOOKMARKS).get("aria-label"),
             ),
         )
 
         self.status = Status(
-            is_liked=bool(soup.select(Selector.LIKED)),
-            is_retweeted=bool(soup.select(Selector.RETWEETED)),
+            is_liked=bool(soup.select(const.Selector.LIKED)),
+            is_retweeted=bool(soup.select(const.Selector.RETWEETED)),
         )
 
-        thumbnail_elements = soup.select(Selector.VIDEO_THUMBNAILS)
+        thumbnail_elements = soup.select(const.Selector.VIDEO_THUMBNAILS)
         thumbnail_extractor_map = {
             "video": (lambda e: e.get("poster")),
             "img": (lambda e: e.get("src")),
@@ -88,10 +97,12 @@ class Tweet:
         thumbnails = [thumbnail_extractor_map[e.name](e) for e in thumbnail_elements]
         self.media = Media(
             img=Img(
-                count=len(soup.select(Selector.IMGS)),
-                urls=[e.get("src") for e in soup.select(Selector.IMGS)],
+                count=len(soup.select(const.Selector.IMGS)),
+                urls=[e.get("src") for e in soup.select(const.Selector.IMGS)],
             ),
-            video=Video(count=len(soup.select(Selector.VIDEOS)), thumbnails=thumbnails),
+            video=Video(
+                count=len(soup.select(const.Selector.VIDEOS)), thumbnails=thumbnails
+            ),
         )
 
     def __getstate__(self):
@@ -106,36 +117,42 @@ class Tweet:
     def like(self):
         self.driver.implicitly_wait(10)
         try:
-            self.__element.find_element(By.CSS_SELECTOR, Selector.UNLIKED).click()
-        except:
+            self.__element.find_element(By.CSS_SELECTOR, const.Selector.UNLIKED).click()
+        except NoSuchElementException:
             print(f"failed to like a tweet {self.id=}")
         self.driver.implicitly_wait(0)
 
     def unlike(self):
         self.driver.implicitly_wait(10)
         try:
-            self.__element.find_element(By.CSS_SELECTOR, Selector.LIKED).click()
-        except:
+            self.__element.find_element(By.CSS_SELECTOR, const.Selector.LIKED).click()
+        except (NoSuchElementException, ElementNotInteractableException):
             print(f"failed to unlike a tweet {self.id=}")
         self.driver.implicitly_wait(0)
 
     def retweet(self):
         self.driver.implicitly_wait(10)
         try:
-            self.__element.find_element(By.CSS_SELECTOR, Selector.UNRETWEETED).click()
-            self.driver.find_element(By.CSS_SELECTOR, Selector.RETWEET_CONFIRM).click()
-        except:
+            self.__element.find_element(
+                By.CSS_SELECTOR, const.Selector.UNRETWEETED
+            ).click()
+            self.driver.find_element(
+                By.CSS_SELECTOR, const.Selector.RETWEET_CONFIRM
+            ).click()
+        except (NoSuchElementException, ElementNotInteractableException):
             print(f"failed to retweet a tweet {self.id=}")
         self.driver.implicitly_wait(0)
 
     def unretweet(self):
         self.driver.implicitly_wait(10)
         try:
-            self.__element.find_element(By.CSS_SELECTOR, Selector.RETWEETED).click()
-            self.driver.find_element(
-                By.CSS_SELECTOR, Selector.UNRETWEET_CONFIRM
+            self.__element.find_element(
+                By.CSS_SELECTOR, const.Selector.RETWEETED
             ).click()
-        except:
+            self.driver.find_element(
+                By.CSS_SELECTOR, const.Selector.UNRETWEET_CONFIRM
+            ).click()
+        except (NoSuchElementException, ElementNotInteractableException):
             print(f"failed to unretweet a tweet {self.id=}")
         self.driver.implicitly_wait(0)
 
