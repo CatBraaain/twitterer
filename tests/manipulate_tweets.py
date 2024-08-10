@@ -8,7 +8,7 @@ from time import sleep
 os.chdir(Path(__file__).parent)
 sys.path.append("../src")
 
-from twitterer import Twitterer
+from twitterer import Twitterer  # noqa: E402
 
 
 # @snoop()

@@ -1,1 +1,1 @@
-﻿from .twitterer import Twitterer
+from .twitterer import Twitterer  # noqa: F401
