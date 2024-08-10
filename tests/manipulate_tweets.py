@@ -1,10 +1,12 @@
 import os
+import sys
 from pathlib import Path
 from time import sleep
 
 # from snoop import pp, snoop
 
 os.chdir(Path(__file__).parent)
+sys.path.append("../src")
 
 from twitterer import Twitterer
 
