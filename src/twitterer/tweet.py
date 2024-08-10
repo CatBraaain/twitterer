@@ -78,7 +78,9 @@ class Tweet:
 
     def __init__(self, driver: WebDriver, element: WebElement) -> None:
         self.driver = driver
+        self.parse_element(element)
 
+    def parse_element(self, element: WebElement) -> None:
         html = element.get_attribute("outerHTML")
         if html is None:
             raise TypeError
@@ -226,4 +228,4 @@ class Tweet:
         self.driver.implicitly_wait(0)
 
     def update(self) -> None:
-        self.__init__(self.__element)
+        self.parse_element(self.__element)
