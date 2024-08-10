@@ -1,11 +1,10 @@
 import os
 from pathlib import Path
+from time import sleep
 
 # from snoop import pp, snoop
 
 os.chdir(Path(__file__).parent)
-
-from time import sleep
 
 from twitterer import Twitterer
 
