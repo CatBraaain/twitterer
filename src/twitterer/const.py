@@ -1,4 +1,5 @@
 ﻿import os
+from typing import Final
 
 from dotenv import find_dotenv, load_dotenv
 
@@ -7,51 +8,55 @@ if not (env_path):
     raise Exception("Could not find env file to use authenticate")
 load_dotenv(env_path, override=True)
 
-TWITTER_LOGIN_URL = "https://x.com/i/flow/login"
-# TWITTER_REDIRECT_URL = "https://x.com/i/flow/login?redirect_after_login=%2Fhome"
-TWITTER_HOME_URL = "https://x.com/home"
+TWITTER_LOGIN_URL: Final[str] = "https://x.com/i/flow/login"
+# TWITTER_REDIRECT_URL: Final[str] = "https://x.com/i/flow/login?redirect_after_login=%2Fhome"
+TWITTER_HOME_URL: Final[str] = "https://x.com/home"
 
-TWITTER_USERNAME = os.getenv("TWITTER_USERNAME")
-TWITTER_PASSWORD = os.getenv("TWITTER_PASSWORD")
+TWITTER_USERNAME: Final[str | None] = os.getenv("TWITTER_USERNAME")
+TWITTER_PASSWORD: Final[str | None] = os.getenv("TWITTER_PASSWORD")
 
-COOKIES_PATH = "twitter_cookie.pkl"
+COOKIES_PATH: Final[str] = "twitter_cookie.pkl"
 
 
 class Selector:
-    USERNAME = "input[autocomplete='username']"
-    PASSWORD = "input[autocomplete='current-password']"
+    USERNAME: Final[str] = "input[autocomplete='username']"
+    PASSWORD: Final[str] = "input[autocomplete='current-password']"
 
-    LOGIN_SUCCESSED = "[data-testid='SideNav_AccountSwitcher_Button']"
-    LOGIN_FAILED = "[data-testid='mask']"
+    LOGIN_SUCCESSED: Final[str] = "[data-testid='SideNav_AccountSwitcher_Button']"
+    LOGIN_FAILED: Final[str] = "[data-testid='mask']"
 
-    LOADING = "circle[style^='stroke']"
-    BASE = "[data-testid='tweet']"
+    LOADING: Final[str] = "circle[style^='stroke']"
+    BASE: Final[str] = "[data-testid='tweet']"
 
-    URL = "a[href*='/status/']:not([href$='analytics'])"
-    USER_ELEMENTS = "[data-testid='User-Name'] a"
-    VERIFIED = "[data-testid='icon-verified']"
-    DATE_TIME = "time[datetime]"
+    URL: Final[str] = "a[href*='/status/']:not([href$='analytics'])"
+    USER_ELEMENTS: Final[str] = "[data-testid='User-Name'] a"
+    VERIFIED: Final[str] = "[data-testid='icon-verified']"
+    DATE_TIME: Final[str] = "time[datetime]"
 
-    CONTENT = "[data-testid='tweetText'] span,[data-testid='tweetText'] img"
+    CONTENT: Final[str] = "[data-testid='tweetText'] span,[data-testid='tweetText'] img"
 
-    REPLYS = "[data-testid='reply']"
+    REPLYS: Final[str] = "[data-testid='reply']"
 
-    UNRETWEETED = "[data-testid='retweet']"
-    RETWEETED = "[data-testid='unretweet']"
-    RETWEETS = f"{UNRETWEETED},{RETWEETED}"
-    RETWEET_CONFIRM = "[data-testid='retweetConfirm']"
-    UNRETWEET_CONFIRM = "[data-testid='unretweetConfirm']"
+    UNRETWEETED: Final[str] = "[data-testid='retweet']"
+    RETWEETED: Final[str] = "[data-testid='unretweet']"
+    RETWEETS: Final[str] = f"{UNRETWEETED},{RETWEETED}"
+    RETWEET_CONFIRM: Final[str] = "[data-testid='retweetConfirm']"
+    UNRETWEET_CONFIRM: Final[str] = "[data-testid='unretweetConfirm']"
 
-    UNLIKED = "[data-testid='like']"
-    LIKED = "[data-testid='unlike']"
-    LIKES = f"{UNLIKED},{LIKED}"
+    UNLIKED: Final[str] = "[data-testid='like']"
+    LIKED: Final[str] = "[data-testid='unlike']"
+    LIKES: Final[str] = f"{UNLIKED},{LIKED}"
 
-    ANALYTICS = "a[href*='/status/'][href$='/analytics']"
-    BOOKMARKS = "[data-testid='bookmark']"
+    ANALYTICS: Final[str] = "a[href*='/status/'][href$='/analytics']"
+    BOOKMARKS: Final[str] = "[data-testid='bookmark']"
 
-    IMGS = "[data-testid='tweetPhoto'][src^='https://pbs.twimg.com/media/'] img"
-    VIDEOS = "[data-testid='videoPlayer'],[data-testid='previewInterstitial']"
-    VIDEO_THUMBNAILS = (
+    IMGS: Final[str] = (
+        "[data-testid='tweetPhoto'][src^='https://pbs.twimg.com/media/'] img"
+    )
+    VIDEOS: Final[str] = (
+        "[data-testid='videoPlayer'],[data-testid='previewInterstitial']"
+    )
+    VIDEO_THUMBNAILS: Final[str] = (
         "[data-testid='videoPlayer'] video,[data-testid='previewInterstitial'] img"
     )
 

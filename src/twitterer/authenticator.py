@@ -1,5 +1,6 @@
 ﻿import os
 import pickle
+from typing import Callable, List, Literal
 
 from selenium.common.exceptions import (
     InvalidCookieDomainException,
@@ -7,15 +8,21 @@ from selenium.common.exceptions import (
 )
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from . import const
 
+type type_of_EC_all_of = Callable[[WebDriver], List[object] | Literal[False]]
+
 
 class Authenticator:
+    driver: WebDriver
+    condition_logined: type_of_EC_all_of
+    condition_required_to_login: type_of_EC_all_of
 
-    def __init__(self, driver):
+    def __init__(self, driver: WebDriver) -> None:
         self.driver = driver
         self.condition_logined = EC.all_of(
             EC.url_contains(const.TWITTER_HOME_URL),
@@ -30,7 +37,7 @@ class Authenticator:
             ),
         )
 
-    def authenticate(self):
+    def authenticate(self) -> None:
         self.driver.get(const.TWITTER_LOGIN_URL)
 
         has_cookie = os.path.exists(const.COOKIES_PATH)
@@ -46,16 +53,16 @@ class Authenticator:
             self._login()
             self._save_cookies()
 
-    def _load_cookies(self):
+    def _load_cookies(self) -> None:
         cookies = pickle.load(open(const.COOKIES_PATH, "rb"))
         for c in cookies:
             self.driver.add_cookie(c)
 
-    def _save_cookies(self):
+    def _save_cookies(self) -> None:
         cookies = self.driver.get_cookies()
         pickle.dump(cookies, open(const.COOKIES_PATH, "wb"), pickle.HIGHEST_PROTOCOL)
 
-    def _is_logined(self):
+    def _is_logined(self) -> bool:
         try:
             WebDriverWait(self.driver, 10).until(
                 EC.any_of(
@@ -67,7 +74,7 @@ class Authenticator:
         except NoSuchElementException:
             return False
 
-    def _login(self):
+    def _login(self) -> None:
         try:
             self.driver.implicitly_wait(10)
 

@@ -1,20 +1,25 @@
 import datetime
 from pathlib import Path
+from typing import Generator, List, Optional
 
 import jsonpickle
 from fake_useragent import UserAgent
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.remote.webdriver import WebDriver
 
 from .authenticator import Authenticator
 from .collector import Collector
+from .tweet import Tweet
 
 
 class Twitterer:
-    def __init__(self, headless=True):
+    driver: WebDriver
+
+    def __init__(self, headless: bool = True) -> None:
         self.driver = self._get_driver(headless)
 
-    def _get_driver(self, headless=True):
+    def _get_driver(self, headless: bool = True) -> WebDriver:
         options = Options()
         # options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--disable-gpu")
@@ -34,13 +39,13 @@ class Twitterer:
 
         return driver
 
-    def authenticate(self):
+    def authenticate(self) -> None:
         Authenticator(self.driver).authenticate()
 
-    def get_tweets(self, url, max_tweets):
+    def get_tweets(self, url: str, max_tweets: int) -> Generator[Tweet, None, None]:
         yield from Collector(self.driver).get_tweets(url, max_tweets)
 
-    def save_to_file(self, tweets, out_path=None):
+    def save_to_file(self, tweets: List[Tweet], out_path: Optional[str] = None) -> None:
         if out_path is None:
             out_path = f"output\\tweets_{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S.%f")[:-3]}.json"
 

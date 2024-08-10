@@ -8,11 +8,11 @@ from time import sleep
 os.chdir(Path(__file__).parent)
 sys.path.append("../src")
 
-from twitterer import Twitterer  # noqa: E402
+from twitterer import Twitterer  # type: ignore # noqa: E402
 
 
 # @snoop()
-def main():
+def main() -> None:
     twitterer = Twitterer(headless=False)
     twitterer.authenticate()
     for tweet in twitterer.get_tweets(
