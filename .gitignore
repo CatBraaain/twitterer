@@ -7,3 +7,4 @@ output
 TODO.md
 twitter_cookie.pkl
 twitterer.egg-info
+.mypy_cache
