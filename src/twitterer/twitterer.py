@@ -32,7 +32,7 @@ class Twitterer:
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option("detach", not headless)
 
-        if (headless):
+        if headless:
             options.add_argument("--headless=new")
 
         driver = webdriver.Chrome(options=options)
@@ -47,7 +47,7 @@ class Twitterer:
 
     def save_to_file(self, tweets: List[Tweet], out_path: Optional[str] = None) -> None:
         if out_path is None:
-            out_path = f"output\\tweets_{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S.%f")[:-3]}.json"
+            out_path = f"output\\tweets_{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S.%f')[:-3]}.json"
 
         tweets_json = jsonpickle.encode(tweets, unpicklable=False, indent=4)
 
