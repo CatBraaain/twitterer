@@ -76,6 +76,9 @@ class Authenticator:
 
     def _login(self) -> None:
         try:
+            if const.TWITTER_USERNAME is None or const.TWITTER_PASSWORD is None:
+                raise EnvironmentError("username or password is not found")
+
             self.driver.implicitly_wait(10)
 
             username_input = self.driver.find_element(
