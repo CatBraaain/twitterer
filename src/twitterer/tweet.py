@@ -2,7 +2,7 @@ import re
 from dataclasses import dataclass
 from typing import Any, Dict, List
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from selenium.common.exceptions import (
     ElementNotInteractableException,
     NoSuchElementException,
@@ -90,22 +90,14 @@ class Tweet:
         self.html = html
         self.__soup = soup
 
-        try:
-            self.url = "https://x.com" + (
-                soup.select_one(const.Selector.URL).get("href")
-            )
-        except AttributeError:
-            self.url = "https://x.com" + (
-                soup.select_one(const.Selector.ANALYTICS)
-                .get("href")
-                .removesuffix("/analytics")
-            )
+        url_href = self._get_element_attr(const.Selector.URL, "href")
+        analytics_href = self._get_element_attr(const.Selector.ANALYTICS, "href")
+        url_path = url_href or analytics_href.removesuffix("/analytics")
+        self.url = "https://x.com" + url_path
+
         self.id = self.url.split("/")[-1]
 
-        try:
-            self.date_time = soup.select_one(const.Selector.DATE_TIME).get("datetime")
-        except AttributeError:
-            self.date_time = ""
+        self.date_time = self._get_element_attr(const.Selector.DATE_TIME, "datetime")
         self.is_ad = False if self.date_time else True
 
         user_elements = soup.select(const.Selector.USER_ELEMENTS)
@@ -126,38 +118,39 @@ class Tweet:
 
         replys = (
             re.sub(
-                "[^\\d]", "", soup.select_one(const.Selector.REPLYS).get("aria-label")
+                "[^\\d]",
+                "",
+                self._get_element_attr(const.Selector.REPLYS, "aria-label"),
             )
             or "0"
         )
         retweets = (
             re.sub(
-                "[^\\d]", "", soup.select_one(const.Selector.RETWEETS).get("aria-label")
+                "[^\\d]",
+                "",
+                self._get_element_attr(const.Selector.RETWEETS, "aria-label"),
             )
             or "0"
         )
         likes = (
             re.sub(
-                "[^\\d]", "", soup.select_one(const.Selector.LIKES).get("aria-label")
+                "[^\\d]", "", self._get_element_attr(const.Selector.LIKES, "aria-label")
             )
             or "0"
         )
-        try:
-            analytics = (
-                re.sub(
-                    "[^\\d]",
-                    "",
-                    soup.select_one(const.Selector.ANALYTICS).get("aria-label"),
-                )
-                or "0"
+        analytics = (
+            re.sub(
+                "[^\\d]",
+                "",
+                self._get_element_attr(const.Selector.ANALYTICS, "aria-label"),
             )
-        except AttributeError:
-            analytics = "0"
+            or "0"
+        )
         bookmarks = (
             re.sub(
                 "[^\\d]",
                 "",
-                soup.select_one(const.Selector.BOOKMARKS).get("aria-label"),
+                self._get_element_attr(const.Selector.BOOKMARKS, "aria-label"),
             )
             or "0"
         )
@@ -184,12 +177,33 @@ class Tweet:
         self.media = Media(
             img=Img(
                 count=len(soup.select(const.Selector.IMGS)),
-                urls=[e.get("src") for e in soup.select(const.Selector.IMGS)],
+                urls=self._get_elements_attr(const.Selector.IMGS, "src"),
             ),
             video=Video(
                 count=len(soup.select(const.Selector.VIDEOS)), thumbnails=thumbnails
             ),
         )
+
+    def _get_element_attr(self, locator: str, key: str) -> str:
+        element = self.__soup.select_one(locator)
+        if element is None:
+            return ""
+        return self._get_attr_from_element(element, key)
+
+    def _get_elements_attr(self, locator: str, key: str) -> List[str]:
+        elements = self.__soup.select(locator)
+        return [self._get_attr_from_element(element, key) for element in elements]
+
+    def _get_attr_from_element(self, element: Tag, key: str) -> str:
+        value = element.get(key)
+        if isinstance(value, str):
+            return value
+        elif isinstance(value, list):
+            return ",".join(value)
+        elif value is None:
+            return ""
+        else:
+            return ""
 
     def __getstate__(self) -> Dict[str, Any]:
         state = self.__dict__.copy()
