@@ -124,27 +124,42 @@ class Tweet:
             [content_extractor_map[e.name](e) for e in content_elements]
         )
 
-        replys = re.sub(
-            "[^\\d]", "0", soup.select_one(const.Selector.REPLYS).get("aria-label")
+        replys = (
+            re.sub(
+                "[^\\d]", "", soup.select_one(const.Selector.REPLYS).get("aria-label")
+            )
+            or "0"
         )
-        retweets = re.sub(
-            "[^\\d]", "0", soup.select_one(const.Selector.RETWEETS).get("aria-label")
+        retweets = (
+            re.sub(
+                "[^\\d]", "", soup.select_one(const.Selector.RETWEETS).get("aria-label")
+            )
+            or "0"
         )
-        likes = re.sub(
-            "[^\\d]", "0", soup.select_one(const.Selector.LIKES).get("aria-label")
+        likes = (
+            re.sub(
+                "[^\\d]", "", soup.select_one(const.Selector.LIKES).get("aria-label")
+            )
+            or "0"
         )
         try:
-            analytics = re.sub(
-                "[^\\d]",
-                "0",
-                soup.select_one(const.Selector.ANALYTICS).get("aria-label"),
+            analytics = (
+                re.sub(
+                    "[^\\d]",
+                    "",
+                    soup.select_one(const.Selector.ANALYTICS).get("aria-label"),
+                )
+                or "0"
             )
         except AttributeError:
             analytics = "0"
-        bookmarks = re.sub(
-            "[^\\d]",
-            "0",
-            soup.select_one(const.Selector.BOOKMARKS).get("aria-label"),
+        bookmarks = (
+            re.sub(
+                "[^\\d]",
+                "",
+                soup.select_one(const.Selector.BOOKMARKS).get("aria-label"),
+            )
+            or "0"
         )
 
         self.statistic = Statistic(
