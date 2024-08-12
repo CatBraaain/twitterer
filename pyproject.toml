@@ -12,6 +12,7 @@ dependencies = [
     "lxml",
     "python-dotenv",
     "selenium>=4.6",
+    "types-beautifulspup4",
 ]
 description = "Python's package to scrape Twitter with selenium."
 readme = "README.md"
