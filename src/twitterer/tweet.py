@@ -37,23 +37,11 @@ class Status:
 
 
 @dataclass
-class Img:
-    count: int
-    urls: List[str]
-
-
-@dataclass
-class Video:
-    count: int
-    thumbnails: List[str]
-
-
 class Media:
-    def __init__(self, img: Img, video: Video):
-        self.has_img = bool(img.count)
-        self.img = img
-        self.has_video = bool(video.count)
-        self.video = video
+    img_count: int
+    img_urls: List[str]
+    video_count: int
+    video_thumbnails: List[str]
 
 
 class Tweet:
@@ -175,13 +163,10 @@ class Tweet:
         }
         thumbnails = [thumbnail_extractor_map[e.name](e) for e in thumbnail_elements]
         self.media = Media(
-            img=Img(
-                count=len(soup.select(const.Selector.IMGS)),
-                urls=self._get_elements_attr(const.Selector.IMGS, "src"),
-            ),
-            video=Video(
-                count=len(soup.select(const.Selector.VIDEOS)), thumbnails=thumbnails
-            ),
+            img_count=len(soup.select(const.Selector.IMGS)),
+            img_urls=self._get_elements_attr(const.Selector.IMGS, "src"),
+            video_count=len(soup.select(const.Selector.VIDEOS)),
+            video_thumbnails=thumbnails,
         )
 
     def _get_element_attr(self, locator: str, key: str) -> str:
