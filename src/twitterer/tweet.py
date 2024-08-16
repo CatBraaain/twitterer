@@ -87,7 +87,7 @@ class Tweet:
         self.id = self.url.split("/")[-1]
 
         self.date_time = soup.find_element_attr(const.Selector.DATE_TIME, "datetime")
-        self.is_ad = False if self.date_time else True
+        self.is_ad = not bool(self.date_time)
 
         user_element = soup.select_one(const.Selector.USER_ELEMENT)
         self.user = User(
