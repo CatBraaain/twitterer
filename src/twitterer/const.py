@@ -29,7 +29,7 @@ class Selector:
     BASE: Final[str] = "[data-testid='tweet']"
 
     URL: Final[str] = "a[href*='/status/']:not([href$='analytics'])"
-    USER_ELEMENTS: Final[str] = "[data-testid='User-Name'] a"
+    USER_ELEMENT: Final[str] = "[data-testid='User-Name'] [href]"
     VERIFIED: Final[str] = "[data-testid='icon-verified']"
     DATE_TIME: Final[str] = "time[datetime]"
 

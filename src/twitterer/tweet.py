@@ -89,10 +89,10 @@ class Tweet:
         self.date_time = soup.find_element_attr(const.Selector.DATE_TIME, "datetime")
         self.is_ad = False if self.date_time else True
 
-        user_elements = soup.select(const.Selector.USER_ELEMENTS)
+        user_element = soup.select_one(const.Selector.USER_ELEMENT)
         self.user = User(
-            name=user_elements[0].text,
-            id=user_elements[1].text.removeprefix("@"),
+            name=soup.get_element_text(user_element),
+            id=soup.get_element_attr(user_element, "href").removeprefix("/"),
             verified=bool(soup.select(const.Selector.VERIFIED)),
         )
 
