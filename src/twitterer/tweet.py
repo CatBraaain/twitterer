@@ -23,7 +23,7 @@ class User:
 
 
 @dataclass
-class Statistic:
+class Statistics:
     replys: int
     retweets: int
     likes: int
@@ -61,7 +61,7 @@ class Tweet:
     likes: int
     analytics: int
     bookmarks: int
-    statistic: Statistic  # static => statics
+    statistics: Statistics
     status: Status
     media: Media
 
@@ -146,7 +146,7 @@ class Tweet:
             or "0"
         )
 
-        self.statistic = Statistic(
+        self.statistics = Statistics(
             replys=int(replys),
             retweets=int(retweets),
             likes=int(likes),
