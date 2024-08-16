@@ -1,4 +1,3 @@
-import re
 from dataclasses import dataclass
 from typing import Any, Dict, List
 
@@ -105,46 +104,11 @@ class Tweet:
             [content_extractor_map[e.name](e) for e in content_elements]
         )
 
-        replys = (
-            re.sub(
-                "[^\\d]",
-                "",
-                soup.find_element_str(const.Selector.REPLYS, "aria-label"),
-            )
-            or "0"
-        )
-        retweets = (
-            re.sub(
-                "[^\\d]",
-                "",
-                soup.find_element_str(const.Selector.RETWEETS, "aria-label"),
-            )
-            or "0"
-        )
-        likes = (
-            re.sub(
-                "[^\\d]",
-                "",
-                soup.find_element_str(const.Selector.LIKES, "aria-label"),
-            )
-            or "0"
-        )
-        analytics = (
-            re.sub(
-                "[^\\d]",
-                "",
-                soup.find_element_str(const.Selector.ANALYTICS, "aria-label"),
-            )
-            or "0"
-        )
-        bookmarks = (
-            re.sub(
-                "[^\\d]",
-                "",
-                soup.find_element_str(const.Selector.BOOKMARKS, "aria-label"),
-            )
-            or "0"
-        )
+        replys = soup.find_element_num(const.Selector.REPLYS, "aria-label")
+        retweets = soup.find_element_num(const.Selector.RETWEETS, "aria-label")
+        likes = soup.find_element_num(const.Selector.LIKES, "aria-label")
+        analytics = soup.find_element_num(const.Selector.ANALYTICS, "aria-label")
+        bookmarks = soup.find_element_num(const.Selector.BOOKMARKS, "aria-label")
 
         self.statistics = Statistics(
             replys=int(replys),
