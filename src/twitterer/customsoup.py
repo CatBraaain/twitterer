@@ -12,7 +12,9 @@ class CustomSoup(BeautifulSoup):
         return self.get_element_str(element, key)
 
     def find_element_num(self, locator: str, key: str) -> int:
-        return int(re.sub("[^\\d]", "", self.find_element_str(locator, key)) or "0")
+        attr_value = self.find_element_str(locator, key)
+        num_str = re.sub("[^\\d]", "", attr_value) or "0"
+        return int(num_str)
 
     def find_elements_str(self, locator: str, key: str) -> List[str]:
         elements = self.select(locator)
