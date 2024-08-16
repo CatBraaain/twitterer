@@ -79,20 +79,20 @@ class Tweet:
         self.html = html
         self.__soup = soup
 
-        url_href = soup.find_element_attr(const.Selector.URL, "href")
-        analytics_href = soup.find_element_attr(const.Selector.ANALYTICS, "href")
+        url_href = soup.find_element_str(const.Selector.URL, "href")
+        analytics_href = soup.find_element_str(const.Selector.ANALYTICS, "href")
         url_path = url_href or analytics_href.removesuffix("/analytics")
         self.url = "https://x.com" + url_path
 
         self.id = self.url.split("/")[-1]
 
-        self.date_time = soup.find_element_attr(const.Selector.DATE_TIME, "datetime")
+        self.date_time = soup.find_element_str(const.Selector.DATE_TIME, "datetime")
         self.is_ad = not bool(self.date_time)
 
         user_element = soup.select_one(const.Selector.USER_ELEMENT)
         self.user = User(
             name=soup.get_element_text(user_element),
-            id=soup.get_element_attr(user_element, "href").removeprefix("/"),
+            id=soup.get_element_str(user_element, "href").removeprefix("/"),
             verified=bool(soup.select(const.Selector.VERIFIED)),
         )
 
@@ -109,7 +109,7 @@ class Tweet:
             re.sub(
                 "[^\\d]",
                 "",
-                soup.find_element_attr(const.Selector.REPLYS, "aria-label"),
+                soup.find_element_str(const.Selector.REPLYS, "aria-label"),
             )
             or "0"
         )
@@ -117,7 +117,7 @@ class Tweet:
             re.sub(
                 "[^\\d]",
                 "",
-                soup.find_element_attr(const.Selector.RETWEETS, "aria-label"),
+                soup.find_element_str(const.Selector.RETWEETS, "aria-label"),
             )
             or "0"
         )
@@ -125,7 +125,7 @@ class Tweet:
             re.sub(
                 "[^\\d]",
                 "",
-                soup.find_element_attr(const.Selector.LIKES, "aria-label"),
+                soup.find_element_str(const.Selector.LIKES, "aria-label"),
             )
             or "0"
         )
@@ -133,7 +133,7 @@ class Tweet:
             re.sub(
                 "[^\\d]",
                 "",
-                soup.find_element_attr(const.Selector.ANALYTICS, "aria-label"),
+                soup.find_element_str(const.Selector.ANALYTICS, "aria-label"),
             )
             or "0"
         )
@@ -141,7 +141,7 @@ class Tweet:
             re.sub(
                 "[^\\d]",
                 "",
-                soup.find_element_attr(const.Selector.BOOKMARKS, "aria-label"),
+                soup.find_element_str(const.Selector.BOOKMARKS, "aria-label"),
             )
             or "0"
         )
@@ -167,7 +167,7 @@ class Tweet:
         thumbnails = [thumbnail_extractor_map[e.name](e) for e in thumbnail_elements]
         self.media = Media(
             img_count=len(soup.select(const.Selector.IMGS)),
-            img_urls=soup.find_elements_attr(const.Selector.IMGS, "src"),
+            img_urls=soup.find_elements_str(const.Selector.IMGS, "src"),
             video_count=len(soup.select(const.Selector.VIDEOS)),
             video_thumbnails=thumbnails,
         )
