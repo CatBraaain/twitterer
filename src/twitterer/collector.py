@@ -1,4 +1,4 @@
-from typing import Generator, List, Optional
+from typing import Generator, Optional
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
@@ -13,8 +13,8 @@ from .tweet import Tweet
 class Collector:
     driver: WebDriver
     max_tweets: int
-    tweets: List[Tweet]
-    tweet_elements: List[WebElement]
+    tweets: list[Tweet]
+    tweet_elements: list[WebElement]
 
     def __init__(self, driver: WebDriver) -> None:
         self.driver = driver

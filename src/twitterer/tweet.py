@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from typing import Any
 
 from bs4 import BeautifulSoup
 from selenium.common.exceptions import (
@@ -39,9 +39,9 @@ class Status:
 @dataclass
 class Media:
     img_count: int
-    img_urls: List[str]
+    img_urls: list[str]
     video_count: int
-    video_thumbnails: List[str]
+    video_thumbnails: list[str]
 
 
 class Tweet:
@@ -136,7 +136,7 @@ class Tweet:
             video_thumbnails=thumbnails,
         )
 
-    def __getstate__(self) -> Dict[str, Any]:
+    def __getstate__(self) -> dict[str, Any]:
         state = self.__dict__.copy()
         del state["_Tweet__element"]
         del state["html"]

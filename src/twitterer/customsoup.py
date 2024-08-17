@@ -1,5 +1,4 @@
 import re
-from typing import List
 
 from bs4 import BeautifulSoup, Tag
 
@@ -16,7 +15,7 @@ class CustomSoup(BeautifulSoup):
         num_str = re.sub("[^\\d]", "", attr_value) or "0"
         return int(num_str)
 
-    def find_elements_str(self, locator: str, key: str) -> List[str]:
+    def find_elements_str(self, locator: str, key: str) -> list[str]:
         elements = self.select(locator)
         return [self.get_element_str(element, key) for element in elements]
 

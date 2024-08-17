@@ -1,6 +1,6 @@
 import datetime
 from pathlib import Path
-from typing import Generator, List, Optional
+from typing import Generator, Optional
 
 import jsonpickle
 from fake_useragent import UserAgent
@@ -45,7 +45,7 @@ class Twitterer:
     def get_tweets(self, url: str, max_tweets: int) -> Generator[Tweet, None, None]:
         yield from Collector(self.driver).get_tweets(url, max_tweets)
 
-    def save_to_file(self, tweets: List[Tweet], out_path: Optional[str] = None) -> None:
+    def save_to_file(self, tweets: list[Tweet], out_path: Optional[str] = None) -> None:
         if out_path is None:
             out_path = f"output\\tweets_{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S.%f')[:-3]}.json"
 

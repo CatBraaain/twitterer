@@ -1,6 +1,6 @@
 ﻿import os
 import pickle
-from typing import Callable, List, Literal
+from typing import Callable, Literal
 
 from selenium.common.exceptions import (
     InvalidCookieDomainException,
@@ -14,7 +14,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from . import const
 
-type type_of_EC_all_of = Callable[[WebDriver], List[object] | Literal[False]]
+type type_of_EC_all_of = Callable[[WebDriver], list[object] | Literal[False]]
 
 
 class Authenticator:
