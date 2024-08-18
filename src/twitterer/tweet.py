@@ -22,7 +22,7 @@ class User:
 
 
 @dataclass
-class Statistics:
+class Stats:
     replys: int
     retweets: int
     likes: int
@@ -60,7 +60,7 @@ class Tweet:
     likes: int
     analytics: int
     bookmarks: int
-    statistics: Statistics
+    stats: Stats
     status: Status
     media: Media
 
@@ -110,7 +110,7 @@ class Tweet:
         analytics = soup.find_element_num(const.Selector.ANALYTICS, "aria-label")
         bookmarks = soup.find_element_num(const.Selector.BOOKMARKS, "aria-label")
 
-        self.statistics = Statistics(
+        self.stats = Stats(
             replys=int(replys),
             retweets=int(retweets),
             likes=int(likes),
