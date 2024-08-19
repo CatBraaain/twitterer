@@ -56,15 +56,16 @@ class Collector:
         if self._is_loading():
             WebDriverWait(self.driver, 10).until_not(self._is_loading)
 
+        new_tweet_element: Optional[WebElement] = None
         try:
-            new_tweet_element: Optional[WebElement] = WebDriverWait(
-                self.driver, 5
-            ).until(self._get_new_tweet_element)
+            new_tweet_element = WebDriverWait(self.driver, 5).until(
+                self._get_new_tweet_element
+            )
         except NoSuchElementException:
             print(f"got {len(self.tweets)}/{self.max_tweets} tweets")
             print("no more tweets")
-            new_tweet_element = None
-        return new_tweet_element
+        finally:
+            return new_tweet_element
 
     def _is_loading(self, _: Optional[WebDriver] = None) -> bool:
         is_loading = bool(
