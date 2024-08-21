@@ -1,6 +1,6 @@
 from typing import Generator, Optional
 
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver, WebElement
 from selenium.webdriver.support.ui import WebDriverWait
@@ -39,6 +39,8 @@ class Collector:
                 print(f"Got {len(self.tweets)}/{self.max_tweets} tweets.")
                 print("Reached the bottom of the page and no more tweets available.")
                 break
+            except StaleElementReferenceException:
+                continue
 
             self.tweets.append(new_tweet)
             yield new_tweet
