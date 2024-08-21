@@ -33,14 +33,14 @@ class Collector:
 
         while True:
             if self._has_enough_tweets:
-                print(f"got {len(self.tweets)}/{self.max_tweets} tweets")
-                print("reached max tweets")
+                print(f"Got {len(self.tweets)}/{self.max_tweets} tweets")
+                print("Successfully retrieved the specified number of tweets.")
                 break
             try:
                 new_tweet_element: WebElement = self._wait_for_next_tweet_element()  # type: ignore[assignment] # cuz `.until()` returns truthy
             except TimeoutException:
-                print(f"got {len(self.tweets)}/{self.max_tweets} tweets")
-                print("no more tweets")
+                print(f"Got {len(self.tweets)}/{self.max_tweets} tweets.")
+                print("Reached the bottom of the page and no more tweets available.")
                 break
 
             new_tweet = Tweet(self.driver, new_tweet_element)
