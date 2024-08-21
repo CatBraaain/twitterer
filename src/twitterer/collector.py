@@ -54,7 +54,7 @@ class Collector:
 
     def _wait_for_next_tweet_element(self) -> Optional[WebElement]:
         if self._is_loading():
-            WebDriverWait(self.driver, 10).until_not(self._is_loading)
+            WebDriverWait(self.driver, 10).until_not(lambda _: self._is_loading())
 
         new_tweet_element: Optional[WebElement] = None
         try:
@@ -67,7 +67,7 @@ class Collector:
         finally:
             return new_tweet_element
 
-    def _is_loading(self, _: Optional[WebDriver] = None) -> bool:
+    def _is_loading(self) -> bool:
         is_loading = bool(
             self.driver.find_elements(By.CSS_SELECTOR, const.Selector.LOADING)
         )
