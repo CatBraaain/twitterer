@@ -11,7 +11,7 @@ from .tweet import Tweet
 
 class Collector:
     driver: WebDriver
-    max_tweets: int
+    max_tweet_count: int
     tweets: list[Tweet]
 
     def __init__(self, driver: WebDriver) -> None:
@@ -19,16 +19,16 @@ class Collector:
         self.tweets = []
 
     def get_tweets(
-        self, url: str, max_tweets: int = 50
+        self, url: str, max_tweet_count: int = 50
     ) -> Generator[Tweet, None, None]:
         self.tweets = []
-        self.max_tweets = max_tweets
+        self.max_tweet_count = max_tweet_count
 
         self.driver.get(url)
 
         while True:
             if self._has_enough_tweets:
-                print(f"Got {len(self.tweets)}/{self.max_tweets} tweets")
+                print(f"Got {len(self.tweets)}/{self.max_tweet_count} tweets")
                 print("Successfully retrieved the specified number of tweets.")
                 break
             try:
@@ -36,7 +36,7 @@ class Collector:
                     lambda _: self._get_new_tweet()
                 )  # type: ignore[assignment] # cuz `.until()` returns truthy
             except TimeoutException:
-                print(f"Got {len(self.tweets)}/{self.max_tweets} tweets.")
+                print(f"Got {len(self.tweets)}/{self.max_tweet_count} tweets.")
                 print("Reached the bottom of the page and no more tweets available.")
                 break
             except StaleElementReferenceException:
@@ -47,7 +47,7 @@ class Collector:
 
     @property
     def _has_enough_tweets(self) -> bool:
-        return len(self.tweets) >= self.max_tweets
+        return len(self.tweets) >= self.max_tweet_count
 
     def _get_new_tweet(self) -> Optional[Tweet]:
         if not self._is_at_bottom:

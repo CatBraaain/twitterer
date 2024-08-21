@@ -17,7 +17,7 @@ def main() -> None:
     tweets = list(
         twitterer.get_tweets(
             url="https://x.com/search?q=funny%20min_retweets:1000%20filter:videos",
-            max_tweets=10,
+            max_tweet_count=10,
         )
     )
 

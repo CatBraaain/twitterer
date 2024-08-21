@@ -42,8 +42,10 @@ class Twitterer:
     def authenticate(self) -> None:
         Authenticator(self.driver).authenticate()
 
-    def get_tweets(self, url: str, max_tweets: int) -> Generator[Tweet, None, None]:
-        yield from Collector(self.driver).get_tweets(url, max_tweets)
+    def get_tweets(
+        self, url: str, max_tweet_count: int
+    ) -> Generator[Tweet, None, None]:
+        yield from Collector(self.driver).get_tweets(url, max_tweet_count)
 
     def save_to_file(self, tweets: list[Tweet], out_path: Optional[str] = None) -> None:
         if out_path is None:
