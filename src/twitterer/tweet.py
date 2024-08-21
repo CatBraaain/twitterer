@@ -46,7 +46,7 @@ class Media:
 
 class Tweet:
     driver: WebDriver
-    __element: WebElement
+    element: WebElement
     html: str
     __soup: BeautifulSoup
     url: str
@@ -74,7 +74,7 @@ class Tweet:
             raise TypeError
         soup = CustomSoup(html, "lxml")
 
-        self.__element = element
+        self.element = element
         self.html = html
         self.__soup = soup
 
@@ -138,17 +138,17 @@ class Tweet:
 
     def __getstate__(self) -> dict[str, Any]:
         state = self.__dict__.copy()
-        del state["_Tweet__element"]
-        del state["html"]
-        del state["_Tweet__soup"]
-        del state["driver"]
+        state.pop("element")
+        state.pop("html")
+        state.pop("_Tweet__soup")
+        state.pop("driver")
 
         return state
 
     def like(self) -> None:
         self.driver.implicitly_wait(10)
         try:
-            self.__element.find_element(By.CSS_SELECTOR, const.Selector.UNLIKED).click()
+            self.element.find_element(By.CSS_SELECTOR, const.Selector.UNLIKED).click()
         except NoSuchElementException:
             print(f"failed to like a tweet {self.id=}")
         self.driver.implicitly_wait(0)
@@ -156,7 +156,7 @@ class Tweet:
     def unlike(self) -> None:
         self.driver.implicitly_wait(10)
         try:
-            self.__element.find_element(By.CSS_SELECTOR, const.Selector.LIKED).click()
+            self.element.find_element(By.CSS_SELECTOR, const.Selector.LIKED).click()
         except (NoSuchElementException, ElementNotInteractableException):
             print(f"failed to unlike a tweet {self.id=}")
         self.driver.implicitly_wait(0)
@@ -164,7 +164,7 @@ class Tweet:
     def retweet(self) -> None:
         self.driver.implicitly_wait(10)
         try:
-            self.__element.find_element(
+            self.element.find_element(
                 By.CSS_SELECTOR, const.Selector.UNRETWEETED
             ).click()
             self.driver.find_element(
@@ -177,9 +177,7 @@ class Tweet:
     def unretweet(self) -> None:
         self.driver.implicitly_wait(10)
         try:
-            self.__element.find_element(
-                By.CSS_SELECTOR, const.Selector.RETWEETED
-            ).click()
+            self.element.find_element(By.CSS_SELECTOR, const.Selector.RETWEETED).click()
             self.driver.find_element(
                 By.CSS_SELECTOR, const.Selector.UNRETWEET_CONFIRM
             ).click()
@@ -188,4 +186,4 @@ class Tweet:
         self.driver.implicitly_wait(0)
 
     def update(self) -> None:
-        self.parse_element(self.__element)
+        self.parse_element(self.element)
