@@ -31,9 +31,18 @@ class Collector:
 
         self.driver.get(url)
 
-        while not (self._has_enough_tweets) and (
-            new_tweet_element := self._wait_for_next_tweet_element()
-        ):
+        while True:
+            if self._has_enough_tweets:
+                print(f"got {len(self.tweets)}/{self.max_tweets} tweets")
+                print("reached max tweets")
+                break
+            try:
+                new_tweet_element: WebElement = self._wait_for_next_tweet_element()  # type: ignore[assignment] # cuz `.until()` returns truthy
+            except NoSuchElementException:
+                print(f"got {len(self.tweets)}/{self.max_tweets} tweets")
+                print("no more tweets")
+                break
+
             new_tweet = Tweet(self.driver, new_tweet_element)
 
             self.tweet_elements.append(new_tweet_element)
@@ -46,27 +55,17 @@ class Collector:
 
     @property
     def _has_enough_tweets(self) -> bool:
-        reached_max = len(self.tweets) >= self.max_tweets
-        if reached_max:
-            print(f"got {len(self.tweets)}/{self.max_tweets} tweets")
-            print("reached max tweets")
-
-        return reached_max
+        return len(self.tweets) >= self.max_tweets
 
     def _wait_for_next_tweet_element(self) -> Optional[WebElement]:
         if self._is_loading:
             WebDriverWait(self.driver, 10).until_not(lambda _: self._is_loading)
 
         new_tweet_element: Optional[WebElement] = None
-        try:
-            new_tweet_element = WebDriverWait(self.driver, 5).until(
-                self._get_new_tweet_element
-            )
-        except NoSuchElementException:
-            print(f"got {len(self.tweets)}/{self.max_tweets} tweets")
-            print("no more tweets")
-        finally:
-            return new_tweet_element
+        new_tweet_element = WebDriverWait(self.driver, 5).until(
+            self._get_new_tweet_element
+        )
+        return new_tweet_element
 
     @property
     def _is_loading(self) -> bool:
