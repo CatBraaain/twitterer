@@ -31,7 +31,7 @@ class Collector:
 
         self.driver.get(url)
 
-        while not (self._reached_max()) and (
+        while not (self._has_enough_tweets) and (
             new_tweet_element := self._wait_for_next_tweet_element()
         ):
             new_tweet = Tweet(self.driver, new_tweet_element)
@@ -44,7 +44,8 @@ class Collector:
                 "arguments[0].scrollIntoView(true);", new_tweet_element
             )
 
-    def _reached_max(self) -> bool:
+    @property
+    def _has_enough_tweets(self) -> bool:
         reached_max = len(self.tweets) >= self.max_tweets
         if reached_max:
             print(f"got {len(self.tweets)}/{self.max_tweets} tweets")
@@ -53,8 +54,8 @@ class Collector:
         return reached_max
 
     def _wait_for_next_tweet_element(self) -> Optional[WebElement]:
-        if self._is_loading():
-            WebDriverWait(self.driver, 10).until_not(lambda _: self._is_loading())
+        if self._is_loading:
+            WebDriverWait(self.driver, 10).until_not(lambda _: self._is_loading)
 
         new_tweet_element: Optional[WebElement] = None
         try:
@@ -67,11 +68,9 @@ class Collector:
         finally:
             return new_tweet_element
 
+    @property
     def _is_loading(self) -> bool:
-        is_loading = bool(
-            self.driver.find_elements(By.CSS_SELECTOR, const.Selector.LOADING)
-        )
-        return is_loading
+        return bool(self.driver.find_elements(By.CSS_SELECTOR, const.Selector.LOADING))
 
     def _get_new_tweet_element(
         self, _: Optional[WebDriver] = None
