@@ -1,6 +1,6 @@
 from typing import Generator, Optional
 
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
@@ -38,7 +38,7 @@ class Collector:
                 break
             try:
                 new_tweet_element: WebElement = self._wait_for_next_tweet_element()  # type: ignore[assignment] # cuz `.until()` returns truthy
-            except NoSuchElementException:
+            except TimeoutException:
                 print(f"got {len(self.tweets)}/{self.max_tweets} tweets")
                 print("no more tweets")
                 break
