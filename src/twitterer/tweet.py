@@ -145,6 +145,11 @@ class Tweet:
 
         return state
 
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, self.__class__):
+            return self.id == other.id
+        return False
+
     def like(self) -> None:
         self.driver.implicitly_wait(10)
         try:
