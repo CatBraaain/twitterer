@@ -51,6 +51,8 @@ class Collector:
         return len(self.tweets) >= self.max_tweet_count
 
     def _get_new_tweet(self) -> Optional[Tweet]:
+        WebDriverWait(self.driver, 10).until_not(lambda _: self._is_loading)
+
         if not self._is_at_bottom:
             new_tweet = self._find_new_tweet()
         else:
@@ -60,14 +62,16 @@ class Collector:
         return new_tweet
 
     @property
+    def _is_loading(self) -> bool:
+        return bool(self.driver.find_elements(By.CSS_SELECTOR, const.Selector.LOADING))
+
+    @property
     def _is_at_bottom(self) -> bool:
         return self.driver.execute_script(
             "return Math.abs(document.body.scrollHeight - window.innerHeight - window.scrollY) < 100;"
         )
 
     def _find_new_tweet(self) -> Optional[Tweet]:
-        WebDriverWait(self.driver, 10).until_not(lambda _: self._is_loading)
-
         tweet_elements = self.driver.find_elements(By.CSS_SELECTOR, const.Selector.BASE)
         tweets = [Tweet(self.driver, tweet_element) for tweet_element in tweet_elements]
         new_tweets = [tweet for tweet in tweets if tweet not in self.tweets]
@@ -80,10 +84,6 @@ class Collector:
             self._scroll_to_element(tweets[-1].element)
 
         return new_tweet
-
-    @property
-    def _is_loading(self) -> bool:
-        return bool(self.driver.find_elements(By.CSS_SELECTOR, const.Selector.LOADING))
 
     def _scroll_to_element(self, element: WebElement) -> None:
         self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
