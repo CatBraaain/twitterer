@@ -32,7 +32,10 @@ class Twitterer:
             "--log-level=1"
         )  # suppress `Created TensorFlow Lite XNNPACK delegate for CPU.` message
         options.add_argument(f"--user-agent={UserAgent().chrome}")
-        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option(
+            "excludeSwitches",
+            ["enable-automation"],
+        )  # suppress `Chrome is being controlled by automated test software` message
         options.add_experimental_option("detach", not headless)
 
         if headless:
