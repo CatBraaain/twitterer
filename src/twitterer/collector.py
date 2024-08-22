@@ -36,7 +36,7 @@ class Collector:
 
             try:
                 new_tweet: Tweet = WebDriverWait(self.driver, float("inf")).until(
-                    lambda _: self._get_new_tweet()
+                    lambda _: self._find_new_tweet()
                 )  # type: ignore[assignment] # cuz `.until()` returns truthy
             except TweetsRanOut:
                 progress.stop_on_got_all()
@@ -52,15 +52,15 @@ class Collector:
     def _has_enough_tweets(self) -> bool:
         return len(self.tweets) >= self.max_tweet_count
 
-    def _get_new_tweet(self) -> Optional[Tweet]:
+    def _find_new_tweet(self) -> Optional[Tweet]:
         WebDriverWait(self.driver, 10).until_not(lambda _: self._is_loading)
 
         if not self._is_at_bottom:
-            new_tweet = self._find_new_tweet()
+            new_tweet = self._scrape_new_tweet()
         else:
             try:
                 new_tweet = WebDriverWait(self.driver, 5).until(
-                    lambda _: self._find_new_tweet()
+                    lambda _: self._scrape_new_tweet()
                 )
             except TimeoutException:
                 raise TweetsRanOut()
@@ -76,7 +76,7 @@ class Collector:
             "return Math.abs(document.body.scrollHeight - window.innerHeight - window.scrollY) < 100;"
         )
 
-    def _find_new_tweet(self) -> Optional[Tweet]:
+    def _scrape_new_tweet(self) -> Optional[Tweet]:
         tweet_elements = self.driver.find_elements(By.CSS_SELECTOR, const.Selector.BASE)
         tweets = [Tweet(self.driver, tweet_element) for tweet_element in tweet_elements]
         new_tweets = [tweet for tweet in tweets if tweet not in self.tweets]
