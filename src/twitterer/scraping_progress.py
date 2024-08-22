@@ -53,3 +53,11 @@ class ScrapingProgress(Progress):
         )
         self.stop()
         console.print(f"Successfully got all tweets in [link]{self.url}[/link]")
+
+    def stop_on_empty(self) -> None:
+        self.update(
+            self.task_id,
+            description=f"Scraped {self.task.completed}/0({self.task.total}) tweets",
+        )
+        self.stop()
+        console.print("No results found for the query")

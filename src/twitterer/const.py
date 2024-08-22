@@ -26,6 +26,7 @@ class Selector:
     LOGIN_FAILED: Final[str] = "[data-testid='mask']"
 
     LOADING: Final[str] = "circle[style^='stroke']"
+    EMPTY_STATE: Final[str] = "[data-testid='emptyState']"
     BASE: Final[str] = "[data-testid='tweet']"
 
     URL: Final[str] = "a[href*='/status/']:not([href$='analytics'])"
