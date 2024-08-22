@@ -38,7 +38,7 @@ class Collector:
                 new_tweet: Tweet = WebDriverWait(self.driver, float("inf")).until(
                     lambda _: self._get_new_tweet()
                 )  # type: ignore[assignment] # cuz `.until()` returns truthy
-            except TimeoutException:
+            except TweetsRanOut:
                 progress.stop_on_got_all()
                 break
             except StaleElementReferenceException:
@@ -58,9 +58,12 @@ class Collector:
         if not self._is_at_bottom:
             new_tweet = self._find_new_tweet()
         else:
-            new_tweet = WebDriverWait(self.driver, 5).until(
-                lambda _: self._find_new_tweet()
-            )
+            try:
+                new_tweet = WebDriverWait(self.driver, 5).until(
+                    lambda _: self._find_new_tweet()
+                )
+            except TimeoutException:
+                raise TweetsRanOut()
         return new_tweet
 
     @property
@@ -89,3 +92,8 @@ class Collector:
 
     def _scroll_to_element(self, element: WebElement) -> None:
         self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
+
+
+class TweetsRanOut(Exception):
+    def __init__(self, msg: str = "No more tweets available on this page.") -> None:
+        super().__init__(msg)
