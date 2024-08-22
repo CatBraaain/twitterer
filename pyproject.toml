@@ -13,6 +13,7 @@ dependencies = [
     "python-dotenv",
     "selenium>=4.6",
     "types-beautifulsoup4",
+    "rich",
 ]
 description = "Python's package to scrape Twitter with selenium."
 readme = "README.md"

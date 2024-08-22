@@ -6,6 +6,7 @@ from selenium.webdriver.remote.webdriver import WebDriver, WebElement
 from selenium.webdriver.support.ui import WebDriverWait
 
 from . import const
+from .scraping_progress import ScrapingProgress
 from .tweet import Tweet
 
 
@@ -26,10 +27,11 @@ class Collector:
 
         self.driver.get(url)
 
+        progress = ScrapingProgress(url, max_tweet_count)
+
         while True:
             if self._has_enough_tweets:
-                print(f"Got {len(self.tweets)}/{self.max_tweet_count} tweets")
-                print("Successfully retrieved the specified number of tweets.")
+                progress.stop_on_got_enough()
                 break
 
             try:
@@ -37,12 +39,12 @@ class Collector:
                     lambda _: self._get_new_tweet()
                 )  # type: ignore[assignment] # cuz `.until()` returns truthy
             except TimeoutException:
-                print(f"Got {len(self.tweets)}/{self.max_tweet_count} tweets.")
-                print("Reached the bottom of the page and no more tweets available.")
+                progress.stop_on_got_all()
                 break
             except StaleElementReferenceException:
                 continue
 
+            progress.advance_scraping()
             self.tweets.append(new_tweet)
             yield new_tweet
 
