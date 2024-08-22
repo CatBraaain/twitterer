@@ -28,6 +28,9 @@ class Twitterer:
         options.add_argument("--ignore-certificate-errors")
         # options.add_argument("--no-sandbox")
         options.add_argument("--start-maximized")
+        options.add_argument(
+            "--log-level=1"
+        )  # suppress `Created TensorFlow Lite XNNPACK delegate for CPU.` message
         options.add_argument(f"--user-agent={UserAgent().chrome}")
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option("detach", not headless)
