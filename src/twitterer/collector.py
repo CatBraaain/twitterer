@@ -31,6 +31,7 @@ class Collector:
                 print(f"Got {len(self.tweets)}/{self.max_tweet_count} tweets")
                 print("Successfully retrieved the specified number of tweets.")
                 break
+
             try:
                 new_tweet: Tweet = WebDriverWait(self.driver, float("inf")).until(
                     lambda _: self._get_new_tweet()
