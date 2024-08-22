@@ -83,11 +83,11 @@ class Collector:
 
     def _scrape_new_tweet(self) -> Optional[Tweet]:
         tweet_elements = self.driver.find_elements(By.CSS_SELECTOR, const.Selector.BASE)
-        tweets = [Tweet(self.driver, tweet_element) for tweet_element in tweet_elements]
-        if not tweets:
+        if not tweet_elements:
             if self.driver.find_elements(By.CSS_SELECTOR, const.Selector.EMPTY_STATE):
                 raise TweetsEmpty()
 
+        tweets = [Tweet(self.driver, tweet_element) for tweet_element in tweet_elements]
         new_tweets = [tweet for tweet in tweets if tweet not in self.tweets]
         if new_tweets:
             new_tweet = new_tweets[0]
