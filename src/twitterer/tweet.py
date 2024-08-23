@@ -82,8 +82,7 @@ class Tweet:
         analytics_href = soup.find_element_str(const.Selector.ANALYTICS, "href")
         url_path = url_href or analytics_href.removesuffix("/analytics")
         self.url = "https://x.com" + url_path
-
-        self.id = self.url.split("/")[-1]
+        self.id = url_path.split("/")[-1]
 
         self.date_time = soup.find_element_str(const.Selector.DATE_TIME, "datetime")
         self.is_ad = not bool(self.date_time)
