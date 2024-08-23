@@ -67,11 +67,9 @@ class Collector:
                 )
             except TimeoutException:
                 try:
-                    self.driver.execute_script("window.scrollTo(0, 0);")
+                    self._scroll_to("top")
                     WebDriverWait(self.driver, 5).until(lambda _: self._is_at_top)
-                    self.driver.execute_script(
-                        "window.scrollTo(0,document.body.scrollHeight)"
-                    )
+                    self._scroll_to("bottom")
                     WebDriverWait(self.driver, 5).until(lambda _: self._is_at_bottom)
                     new_tweet = WebDriverWait(self.driver, 5).until(
                         lambda _: self._scrape_new_tweet()
@@ -113,15 +111,24 @@ class Collector:
         ]
         if new_tweet_elements:
             new_tweet = Tweet(self.driver, new_tweet_elements[0])
-            self._scroll_to_element(new_tweet.element)
+            self._scroll_to(new_tweet.element)
         else:
             new_tweet = None
-            self._scroll_to_element(tweet_elements[-1])
+            self._scroll_to(tweet_elements[-1])
 
         return new_tweet
 
-    def _scroll_to_element(self, element: WebElement) -> None:
-        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
+    def _scroll_to(self, destination: WebElement | Literal["top", "bottom"]) -> None:
+        if isinstance(destination, WebElement):
+            self.driver.execute_script(
+                "arguments[0].scrollIntoView(true);", destination
+            )
+        elif destination == "top":
+            self.driver.execute_script("window.scrollTo(0, 0);")
+        elif destination == "bottom":
+            self.driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
+        else:
+            pass
 
 
 class TweetsRanOut(Exception):
