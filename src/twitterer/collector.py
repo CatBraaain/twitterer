@@ -87,14 +87,21 @@ class Collector:
             if self.driver.find_elements(By.CSS_SELECTOR, const.Selector.EMPTY_STATE):
                 raise TweetsEmpty()
 
-        tweets = [Tweet(self.driver, tweet_element) for tweet_element in tweet_elements]
-        new_tweets = [tweet for tweet in tweets if tweet not in self.tweets]
-        if new_tweets:
-            new_tweet = new_tweets[0]
+        collected_tweet_urls = [tweet.url for tweet in self.tweets]
+        new_tweet_elements = [
+            tweet_element
+            for tweet_element in tweet_elements
+            if tweet_element.find_element(
+                By.CSS_SELECTOR, const.Selector.URL
+            ).get_attribute("href")
+            not in collected_tweet_urls
+        ]
+        if new_tweet_elements:
+            new_tweet = Tweet(self.driver, new_tweet_elements[0])
             self._scroll_to_element(new_tweet.element)
         else:
             new_tweet = None
-            self._scroll_to_element(tweets[-1].element)
+            self._scroll_to_element(tweet_elements[-1])
 
         return new_tweet
 
