@@ -1,4 +1,4 @@
-from typing import Generator, Optional
+from typing import Generator, Literal, Optional
 
 from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
 from selenium.webdriver.common.by import By
@@ -66,7 +66,18 @@ class Collector:
                     lambda _: self._scrape_new_tweet()
                 )
             except TimeoutException:
-                raise TweetsRanOut()
+                try:
+                    self.driver.execute_script("window.scrollTo(0, 0);")
+                    WebDriverWait(self.driver, 5).until(lambda _: self._is_at_top)
+                    self.driver.execute_script(
+                        "window.scrollTo(0,document.body.scrollHeight)"
+                    )
+                    WebDriverWait(self.driver, 5).until(lambda _: self._is_at_bottom)
+                    new_tweet = WebDriverWait(self.driver, 5).until(
+                        lambda _: self._scrape_new_tweet()
+                    )
+                except TimeoutException:
+                    raise TweetsRanOut()
             except TweetsEmpty:
                 raise TweetsEmpty()
         return new_tweet
@@ -80,6 +91,10 @@ class Collector:
         return self.driver.execute_script(
             "return Math.abs(document.body.scrollHeight - window.innerHeight - window.scrollY) < 100;"
         )
+
+    @property
+    def _is_at_top(self) -> bool:
+        return self.driver.execute_script("return window.scrollY < 100;")
 
     def _scrape_new_tweet(self) -> Optional[Tweet]:
         tweet_elements = self.driver.find_elements(By.CSS_SELECTOR, const.Selector.BASE)
