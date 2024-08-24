@@ -12,3 +12,9 @@ build: clean
 publish: build
 	python -m pip install --upgrade twine
 	twine upload dist/*
+
+pip-install-from-pyproject:
+	pip freeze > installed_packages.txt
+	- pip uninstall -r installed_packages.txt -y
+	del /q installed_packages.txt
+	pip install . && pip uninstall -y twitterer
