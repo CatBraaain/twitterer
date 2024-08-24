@@ -16,8 +16,14 @@ def main() -> None:
     twitterer.authenticate()
     tweets = list(
         twitterer.get_tweets(
-            url="https://x.com/search?q=funny%20min_retweets:1000%20filter:videos",
+            url="https://x.com/search?q=min_retweets:5000+filter:videos&f=live",
             max_tweet_count=10,
+            # url="https://x.com/search?q=min_retweets:250000%20filter:videos",
+            # max_tweet_count=sys.maxsize,
+            # url="https://x.com/search?q=min_retweets:1000000%20filter:videos",
+            # max_tweet_count=sys.maxsize,
+            # url="https://x.com/search?q=min_retweets:5000+filter:videos&f=live",
+            # max_tweet_count=sys.maxsize,
         )
     )
 
